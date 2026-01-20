@@ -1,0 +1,199 @@
+/*script for inserting data in the database*/
+
+INSERT INTO person (personal_number, first_name, last_name, street, zip, city)
+VALUES 
+    ('199801019001', 'Anna', 'Svensson', 'Birch Street 12', '11345', 'Stockholm'),
+    ('198512239876', 'Johan', 'Larsson', 'Maple Road 5', '41122', 'Göteborg'),
+    ('200103159002', 'Emma', 'Lindberg', 'Oak Avenue 33', '21455', 'Malmö'),
+    ('199406279120', 'Marcus', 'Holmström', 'Pine Lane 7', '75221', 'Uppsala'),
+    ('197911019055', 'Sara', 'Nyström', 'Willow Street 18', '98131', 'Kiruna'),
+    ('199305189044', 'Daniel', 'Ekström', 'Spruce Way 44', '17155', 'Stockholm'),
+    ('198807239033', 'Linda', 'Forsberg', 'Aspvägen 2', '90325', 'Umeå'),
+    ('199912249011', 'Felicia', 'Berglund', 'Kastanjevägen 19', '63217', 'Eskilstuna'),
+    ('200205149099', 'Oscar', 'Strömberg', 'Tallvägen 9', '46240', 'Vänersborg'),
+    ('199702179066', 'Maja', 'Eklund', 'Sälgvägen 27', '30245', 'Halmstad');
+
+INSERT INTO department (department_name, manager)
+VALUES 
+    ('Computer Science', 'Anna Svensson'),
+    ('Mathematics', 'Johan Larsson'),
+    ('IT Services', 'Emma Lindberg');
+
+INSERT INTO job_title (job_title)
+VALUES
+    ('Lecturer'),
+    ('Senior Lecturer'),
+    ('Professor'),
+    ('Teaching Assistant'),
+    ('IT Administrator'),
+    ('PhD Student');
+
+INSERT INTO employee (salary, supervisor, person_id, department_id, job_title_id)
+VALUES
+    ('38000', 'Anna Svensson',
+        (SELECT id FROM person WHERE first_name='Johan' AND last_name='Larsson'),
+        (SELECT id FROM department WHERE department_name='Computer Science'),
+        (SELECT id FROM job_title WHERE job_title='PhD Student')
+     ),
+   ('42000', 'Anna Svensson',
+        (SELECT id FROM person WHERE first_name='Emma' AND last_name='Lindberg'),
+        (SELECT id FROM department WHERE department_name='Computer Science'),
+        (SELECT id FROM job_title WHERE job_title='Lecturer')
+    ),
+    ('35000', 'Johan Larsson',
+        (SELECT id FROM person WHERE first_name='Marcus' AND last_name='Holmström'),
+        (SELECT id FROM department WHERE department_name='Mathematics'),
+        (SELECT id FROM job_title WHERE job_title='Teaching Assistant')
+    ),
+    ('32000', 'Emma Lindberg',
+        (SELECT id FROM person WHERE first_name='Sara' AND last_name='Nyström'),
+        (SELECT id FROM department WHERE department_name='Computer Science'),
+        (SELECT id FROM job_title WHERE job_title='Teaching Assistant')
+    ),
+    ('50000', NULL,
+        (SELECT id FROM person WHERE first_name='Daniel' AND last_name='Ekström'),
+        (SELECT id FROM department WHERE department_name='IT Services'),
+        (SELECT id FROM job_title WHERE job_title='IT Administrator')
+    ),
+    ('36000', 'Daniel Ekström',
+        (SELECT id FROM person WHERE first_name='Linda' AND last_name='Forsberg'),
+        (SELECT id FROM department WHERE department_name='IT Services'),
+        (SELECT id FROM job_title WHERE job_title='IT Administrator')
+    ),  
+    ('47000', 'Anna Svensson',
+        (SELECT id FROM person WHERE first_name='Felicia' AND last_name='Berglund'),
+        (SELECT id FROM department WHERE department_name='Computer Science'),
+        (SELECT id FROM job_title WHERE job_title='Professor')
+    ), 
+    ('39000', 'Felicia Berglund',
+        (SELECT id FROM person WHERE first_name='Oscar' AND last_name='Strömberg'),
+        (SELECT id FROM department WHERE department_name='Computer Science'),
+        (SELECT id FROM job_title WHERE job_title='Lecturer')
+    ),
+    ('34000', 'Marcus Holmström',
+        (SELECT id FROM person WHERE first_name='Maja' AND last_name='Eklund'),
+        (SELECT id FROM department WHERE department_name='Mathematics'),
+        (SELECT id FROM job_title WHERE job_title='Teaching Assistant')
+    );  
+
+INSERT INTO phone_number (phone_num)
+VALUES
+    ('+46700000001'),
+    ('+46700000002'),
+    ('+46700000003'),
+    ('+46700000004'),
+    ('+46700000005'),
+    ('+46700000006'),
+    ('+46700000007'),
+    ('+46700000008'),
+    ('+46700000009'),
+    ('+46700000010');
+
+INSERT INTO skill_set (skill_category, skill_description)
+VALUES
+    ('Programming', 'Experienced in Java and Python for backend and teaching.'),
+    ('Databases', 'Can design relational schemas and write complex SQL queries.'),
+    ('Teaching', 'Lectures, seminars and lab supervision for CS courses.'),
+    ('Communication','Good at explaining complex topics to students.'),
+    ('Leadership', 'Coordinates course staff and manages schedules.'),
+    ('Networking', 'Basic knowledge of computer networks and IT support.');
+
+INSERT INTO employee_skill_set (skill_set_id, employee_id)
+VALUES
+    ((SELECT id FROM skill_set WHERE skill_category='Databases'),
+     (SELECT id FROM employee WHERE supervisor='Anna Svensson' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Teaching'),
+     (SELECT id FROM employee WHERE supervisor='Anna Svensson' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Teaching'),
+     (SELECT id FROM employee WHERE supervisor='Johan Larsson' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Communication'),
+     (SELECT id FROM employee WHERE supervisor='Johan Larsson' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Leadership'),
+     (SELECT id FROM employee WHERE supervisor='Felicia Berglund' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Teaching'),
+     (SELECT id FROM employee WHERE supervisor='Felicia Berglund' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Networking'),
+     (SELECT id FROM employee WHERE supervisor='Daniel Ekström' LIMIT 1)),
+    ((SELECT id FROM skill_set WHERE skill_category='Databases'),
+     (SELECT id FROM employee WHERE supervisor='Daniel Ekström' LIMIT 1));
+
+INSERT INTO course_layout (course_code, course_name, min_students, max_students, hp) VALUES 
+    ('IV1351', 'DataStorg', 50, 500, '7.5'),
+    ('IX1500', 'DiscMath', 50, 500, '7.5'),
+   	('IS1200', 'CompSci', 50,  500, '7.5'),
+    ('DH2642', 'WebDev' ,50,  500, '7.5');
+
+INSERT INTO course_instance
+(instance_id, study_period, study_year, num_students, course_layout_id)
+VALUES
+    ('2025-50273', 'P1', '2025', 200, (SELECT id FROM course_layout WHERE course_code='IV1351')),
+    ('2025-50274', 'P2', '2025', 100, (SELECT id FROM course_layout WHERE course_code='IX1500')),
+    ('2026-50275', 'P3', '2026', 150, (SELECT id FROM course_layout WHERE course_code='IS1200')),
+    ('2026-50276', 'P4', '2026', 250, (SELECT id FROM course_layout WHERE course_code='DH2642')),
+    ('2025-50413', 'P1', '2025', 150, (SELECT id FROM course_layout WHERE course_code='IX1500'));
+
+INSERT INTO teaching_activity (activity_name, factor)
+VALUES
+    ('Lecture', '1.0'),
+    ('Lab', '0.5'),
+    ('Seminar', '0.8'),
+    ('Tutorial', '1.2');
+
+INSERT INTO planned_activity (planned_hours, course_instance_id, teaching_activity_id)
+VALUES
+    ('10', (SELECT id FROM course_instance WHERE instance_id='2025-50273'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lecture')),   
+    ('06', (SELECT id FROM course_instance WHERE instance_id='2025-50274'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Seminar')),
+    ('12', (SELECT id FROM course_instance WHERE instance_id='2026-50275'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lecture')),
+    ('72', (SELECT id FROM course_instance WHERE instance_id='2025-50273'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lecture')),
+    ('159', (SELECT id FROM course_instance WHERE instance_id='2025-50274'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lecture')),
+    ('90', (SELECT id FROM course_instance WHERE instance_id='2026-50276'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lecture')),
+    ('192', (SELECT id FROM course_instance WHERE instance_id='2025-50273'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Tutorial')),
+    ('50', (SELECT id FROM course_instance WHERE instance_id='2026-50275'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Tutorial')),
+    ('192', (SELECT id FROM course_instance WHERE instance_id='2025-50273'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lab')),
+    ('75', (SELECT id FROM course_instance WHERE instance_id='2026-50275'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lab')),
+    ('144', (SELECT id FROM course_instance WHERE instance_id='2025-50273'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Seminar')),
+    ('116', (SELECT id FROM course_instance WHERE instance_id='2025-50274'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Seminar')),
+    ('60', (SELECT id FROM course_instance WHERE instance_id='2026-50276'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Seminar')),
+    ('20', (SELECT id FROM course_instance WHERE instance_id='2025-50413'),
+           (SELECT id FROM teaching_activity WHERE activity_name='Lecture'));   
+
+INSERT INTO employee_planned_activity (planned_activity_id, employee_id)
+VALUES
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 2),
+      (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 7)),
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 13),
+      (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 1)),
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 4),
+      (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 8)),
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 3),
+     (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 1)),
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 8),
+      (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 2)),
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 8),
+      (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 3)),
+    ((SELECT id FROM planned_activity ORDER BY id LIMIT 1 OFFSET 10),
+     (SELECT id FROM employee ORDER BY id LIMIT 1 OFFSET 0));
+
+
+
+
+
+
+
+
+                
+
+
